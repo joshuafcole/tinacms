@@ -16,6 +16,10 @@ interface GroupFieldDefinititon extends Field {
   fields: Field[]
   defaultItem?: object | (() => object)
   /**
+   * Whether new items should be added to the end of the list
+   */
+  append?: boolean
+  /**
    * An optional function which generates `props` for
    * this items's `li`.
    */
@@ -54,7 +58,12 @@ const Group = ({ tinaForm, form, field, input, meta, index }: GroupProps) => {
     } else {
       obj = field.defaultItem || {}
     }
-    form.mutators.insert(field.name, 0, obj)
+
+    if (field.append) {
+      form.mutators.push(field.name, obj)
+    } else {
+      form.mutators.insert(field.name, 0, obj)
+    }
   }, [form, field])
 
   const items = input.value || []
